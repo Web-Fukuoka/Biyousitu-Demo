@@ -400,7 +400,7 @@
     if (!("IntersectionObserver" in window) || reduce) { els.forEach(function (e) { e.classList.add("is-in"); }); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
-    }, { rootMargin: "0px", threshold: 0 });
+    }, { rootMargin: "0px 0px -24px 0px", threshold: 0.05 });
     els.forEach(function (e) { io.observe(e); });
   }
 

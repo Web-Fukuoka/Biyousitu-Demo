@@ -437,10 +437,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ---------- Scroll reveal ---------- */
 .js [data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity .6s var(--ease), transform .6s var(--ease); transition-delay: min(var(--d, 0s), .12s); }
 .js [data-reveal].is-in { opacity: 1; transform: none; }
-.js .ph[data-clip] { clip-path: none; opacity: .45; transition: opacity .8s var(--ease); }
+.js .ph[data-clip] { clip-path: none; opacity: 0; transform: translateY(20px); transition: opacity .8s var(--ease), transform .9s var(--ease); }
 .js .reveal-photo { opacity: 1; transform: none; transition: none; }
 .js .ph[data-clip] img { transform: scale(1.035); transition: transform 1s var(--ease); }
-.js .ph[data-clip].is-in { opacity: 1; clip-path: none; }
+.js .ph[data-clip].is-in { opacity: 1; transform: none; clip-path: none; }
 .js .ph[data-clip].is-in img { transform: scale(1); }
 .js .style-card:hover .ph[data-clip] img, .js .staff-card:hover .ph[data-clip] img { transform: scale(1.06); }
 
