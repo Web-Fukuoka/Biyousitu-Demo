@@ -93,7 +93,7 @@
       try { seen = sessionStorage.getItem("kinari-open") === "1"; sessionStorage.setItem("kinari-open", "1"); } catch (e) {}
       if (!seen) {
         document.body.insertAdjacentHTML("afterbegin", '<div class="opening" aria-hidden="true"><div><p class="opening__logo"><span>' + esc(S.name) + '</span></p><div class="opening__line"></div></div></div>');
-        doc.style.setProperty("--open-delay", "0.45s");
+        doc.style.setProperty("--open-delay", "0.65s");
       }
     }
   }
@@ -335,10 +335,10 @@
     if (!v) return;
     var base = parseFloat(getComputedStyle(doc).getPropertyValue("--open-delay")) || 0.2;
     v.innerHTML = Array.from(v.textContent).map(function (c, i) {
-      return '<span class="ch" style="animation-delay:' + (base + 0.1 + i * 0.045).toFixed(2) + 's">' + esc(c) + "</span>";
+      return '<span class="ch" style="animation-delay:' + (base + 0.1 + i * 0.065).toFixed(2) + 's">' + esc(c) + "</span>";
     }).join("");
-    $$(".hero__title .mask > span").forEach(function (s, i) { s.style.animationDelay = (base + i * 0.08).toFixed(2) + "s"; });
-    $$(".hero__lead, .hero__btns").forEach(function (s, i) { s.style.animationDelay = (base + 0.25 + i * 0.08).toFixed(2) + "s"; });
+    $$(".hero__title .mask > span").forEach(function (s, i) { s.style.animationDelay = (base + i * 0.12).toFixed(2) + "s"; });
+    $$(".hero__lead, .hero__btns").forEach(function (s, i) { s.style.animationDelay = (base + 0.4 + i * 0.12).toFixed(2) + "s"; });
   }
 
   // ヘッダー：スクロールで背景、下スクロールで隠れる
@@ -396,11 +396,11 @@
     $$("[data-reveal]").forEach(function (el) {
       if ($("img", el)) el.classList.add("is-in", "reveal-photo");
     });
-    var els = $$("[data-reveal]:not(.reveal-photo)");
+    var els = $$("[data-reveal]:not(.reveal-photo), .ph[data-clip]");
     if (!("IntersectionObserver" in window) || reduce) { els.forEach(function (e) { e.classList.add("is-in"); }); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
-    }, { rootMargin: "0px 0px 100px 0px", threshold: 0 });
+    }, { rootMargin: "0px", threshold: 0 });
     els.forEach(function (e) { io.observe(e); });
   }
 
