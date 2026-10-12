@@ -25,9 +25,9 @@
     opt = opt || {};
     var w = opt.w || 800, h = opt.h || 1000;
     var set = /^(\.|\/|http)/.test(id) ? "" :
-      ' srcset="' + src(id, 480) + ' 480w, ' + src(id, 800) + ' 800w, ' + src(id, 1200) + ' 1200w, ' + src(id, 1800) + ' 1800w" sizes="' + (opt.sizes || "(min-width: 900px) 33vw, 50vw") + '"';
+      ' srcset="' + src(id, 320) + ' 320w, ' + src(id, 480) + ' 480w, ' + src(id, 800) + ' 800w, ' + src(id, 1200) + ' 1200w, ' + src(id, 1800) + ' 1800w" sizes="' + (opt.sizes || "(min-width: 900px) 33vw, 50vw") + '"';
     return '<img src="' + src(id, 800) + '"' + set + ' alt="' + esc(alt) + '" width="' + w + '" height="' + h + '"' +
-      (opt.eager ? ' fetchpriority="high"' : ' loading="lazy" decoding="async"') + ">";
+      (opt.eager ? ' loading="eager" fetchpriority="high" decoding="async"' : ' loading="lazy" decoding="async"') + ">";
   }
   function staffById(id) { return S.staff.filter(function (s) { return s.id === id; })[0]; }
   var lengthJa = { short: "ショート", medium: "ミディアム", long: "ロング" };
@@ -93,7 +93,7 @@
       try { seen = sessionStorage.getItem("kinari-open") === "1"; sessionStorage.setItem("kinari-open", "1"); } catch (e) {}
       if (!seen) {
         document.body.insertAdjacentHTML("afterbegin", '<div class="opening" aria-hidden="true"><div><p class="opening__logo"><span>' + esc(S.name) + '</span></p><div class="opening__line"></div></div></div>');
-        doc.style.setProperty("--open-delay", "1.6s");
+        doc.style.setProperty("--open-delay", "0.45s");
       }
     }
   }
@@ -152,7 +152,7 @@
   R.pageHero = function (el) {
     var p = S.pageHeroes && S.pageHeroes[page];
     if (!p) { el.remove(); return; }
-    el.outerHTML = '<figure class="ph page-hero__ph" data-clip style="--ar:4/3;--d:.45s">' + img(p.id, p.alt, { w: 1200, h: 900, sizes: "(min-width: 900px) 45vw, 100vw", eager: true }) + "</figure>";
+    el.outerHTML = '<figure class="ph page-hero__ph" data-clip style="--ar:4/3;--d:0s">' + img(p.id, p.alt, { w: 1200, h: 900, sizes: "(min-width: 900px) 45vw, 100vw", eager: true }) + "</figure>";
   };
 
   // フォトストリップ（3枚が違う速さで流れる）
@@ -335,10 +335,10 @@
     if (!v) return;
     var base = parseFloat(getComputedStyle(doc).getPropertyValue("--open-delay")) || 0.2;
     v.innerHTML = Array.from(v.textContent).map(function (c, i) {
-      return '<span class="ch" style="animation-delay:' + (base + 0.4 + i * 0.12).toFixed(2) + 's">' + esc(c) + "</span>";
+      return '<span class="ch" style="animation-delay:' + (base + 0.1 + i * 0.045).toFixed(2) + 's">' + esc(c) + "</span>";
     }).join("");
-    $$(".hero__title .mask > span").forEach(function (s, i) { s.style.animationDelay = (base + 0.2 + i * 0.15).toFixed(2) + "s"; });
-    $$(".hero__lead, .hero__btns").forEach(function (s, i) { s.style.animationDelay = (base + 1.3 + i * 0.2).toFixed(2) + "s"; });
+    $$(".hero__title .mask > span").forEach(function (s, i) { s.style.animationDelay = (base + i * 0.08).toFixed(2) + "s"; });
+    $$(".hero__lead, .hero__btns").forEach(function (s, i) { s.style.animationDelay = (base + 0.25 + i * 0.08).toFixed(2) + "s"; });
   }
 
   // ヘッダー：スクロールで背景、下スクロールで隠れる
@@ -372,13 +372,35 @@
     $$("a", d).forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
   }
 
+  // Start nearby image requests before they enter the viewport; keep distant images lazy.
+  function warmImages() {
+    var images = $$('img[loading="lazy"]');
+    function start(im) { im.loading = "eager"; }
+    images.forEach(function (im) {
+      if (im.getBoundingClientRect().top < window.innerHeight) start(im);
+    });
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        start(en.target);
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: "800px 0px", threshold: 0 });
+    images.forEach(function (im) { if (im.loading === "lazy") io.observe(im); });
+  }
+
   // スクロールで表示
   function reveal() {
-    var els = $$("[data-reveal], .ph[data-clip]");
+    // Photo wrappers must not wait for either their own or a parent reveal.
+    $$("[data-reveal]").forEach(function (el) {
+      if ($("img", el)) el.classList.add("is-in", "reveal-photo");
+    });
+    var els = $$("[data-reveal]:not(.reveal-photo)");
     if (!("IntersectionObserver" in window) || reduce) { els.forEach(function (e) { e.classList.add("is-in"); }); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    }, { rootMargin: "0px 0px 100px 0px", threshold: 0 });
     els.forEach(function (e) { io.observe(e); });
   }
 
@@ -506,6 +528,7 @@
   splitHero();
   headerScroll();
   drawer();
+  warmImages();
   reveal();
   parallax();
   demoLinks();
