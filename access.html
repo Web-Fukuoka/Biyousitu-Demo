@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>アクセス・営業時間｜atelier kinari</title>
+<meta name="description" content="atelier kinari へのアクセス。地下鉄空港線「赤坂駅」から徒歩5分。営業時間・定休日・駐車場のご案内。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="アクセス・営業時間｜atelier kinari">
+<meta property="og:image" content="./assets/img/ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Shippori+Mincho:wght@500&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap">
+<link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body data-page="access">
+<main id="main">
+
+  <header class="page-hero">
+    <div class="wrap page-hero__grid">
+      <div>
+        <p class="crumb"><a href="./index.html">Home</a> ／ Access</p>
+        <h1><span class="mask"><span>Access</span></span></h1>
+        <p>アクセス・営業時間</p>
+      </div>
+      <div data-render="pageHero"></div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap access-grid">
+      <div data-reveal>
+        <p class="eyebrow">Information</p>
+        <h2 class="h2" style="margin-bottom:28px">店舗情報</h2>
+        <div data-render="info"></div>
+        <h2 class="h2" style="margin-block:48px 20px">営業時間</h2>
+        <div data-render="hours"></div>
+      </div>
+      <div data-reveal style="--d:.15s">
+        <!--
+          ▼ 実店舗では Google マップの埋め込みに差し替え可能です（GitHub Pages では表示できます）
+          <iframe src="https://www.google.com/maps?q=赤坂駅+福岡&output=embed" width="600" height="450" style="border:0;width:100%;aspect-ratio:4/3;height:auto" loading="lazy" title="地図"></iframe>
+        -->
+        <a class="map-card" data-href="map" target="_blank" rel="noopener" aria-label="Googleマップで場所を開く">
+          <span class="map-pin"><i></i><span>atelier kinari ・ Googleマップで開く</span></span>
+        </a>
+        <ol class="flow flow--photo" style="margin-top:36px" data-render="accessSteps"></ol>
+        <p class="sample-note">※架空の店舗のため、道順もサンプルです。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="bg"><img src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=1800&q=60" alt="" width="1800" height="1200" loading="lazy" decoding="async"></div>
+    <div class="wrap" data-reveal>
+      <p class="en">Reservation</p>
+      <h2>道がわからないときは、お電話ください。</h2>
+      <p class="tel">TEL <span data-bind="tel"></span></p>
+      <div class="btns"><a class="btn" href="./reserve.html">ご予約方法を見る<span class="arrow"></span></a></div>
+    </div>
+  </section>
+
+</main>
+<script src="./assets/js/site-data.js"></script>
+<script src="./assets/js/main.js"></script>
+</body>
+</html>
