@@ -179,8 +179,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ---------- Hero ---------- */
 .hero { position: relative; color: #f4f5ef; min-height: clamp(560px, 92svh, 900px); display: grid; overflow: hidden; background: #2a2f29; }
 .hero__media { position: absolute; inset: 0; }
-.hero__media picture { display: block; width: 100%; height: 100%; }
-.hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: var(--hero-pos, 50% 50%); transform: scale(var(--hero-zoom, 1.12)); animation: heroZoom 12s var(--ease) .3s forwards; }
+.hero__media img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); animation: heroZoom 12s var(--ease) .3s forwards; }
 .hero__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,18,15,.35) 0%, rgba(15,18,15,.05) 40%, rgba(15,18,15,.6) 100%); }
 @keyframes heroZoom { to { transform: scale(1); } }
 .hero__in { position: relative; display: grid; align-content: end; gap: 26px; padding-block: calc(var(--header-h) + 60px) clamp(56px, 8vw, 96px); }
@@ -206,11 +205,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero__scroll::after { content: ""; display: block; width: 1px; height: 54px; margin: 10px auto 0; background: linear-gradient(currentColor 50%, transparent 50%); background-size: 1px 200%; animation: scrollLine 2s linear infinite; }
 @keyframes scrollLine { from { background-position: 0 -100%; } to { background-position: 0 100%; } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-/* 縦長画面：高さを少し抑えて左右の切り落としを減らし、ズーム量も控えめにして終了後の構図とのギャップをなくす */
-@media (max-aspect-ratio: 1/1) {
-  .hero { min-height: clamp(520px, 84svh, 760px); }
-  .hero__media img { --hero-zoom: 1.04; }
-}
 @media (min-width: 960px) { .hero__scroll { display: block; } .hero__in { padding-left: calc(var(--gutter) + 40px); } }
 
 /* ---------- 4点サマリー ---------- */
