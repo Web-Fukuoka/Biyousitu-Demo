@@ -96,3 +96,5 @@
 
 ## Salon exterior replacement
 `assets/img/salon-exterior.webp`: AI-generated fictional atelier kinari hair salon exterior, created with OpenAI image generation, 2026-10-18. Not a photograph of an actual business.
+
+`assets/img/hero-salon.webp` and mobile crop: OpenAI-generated fictional salon interior for the renewed hero, 2026-10-18. Prompt: warm ivory and oak Japanese hair salon, arched mirrors and styling chairs, soft daylight, no people or text.

@@ -17,33 +17,30 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://images.unsplash.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Shippori+Mincho:wght@400;500&display=swap">
-<link rel="stylesheet" href="./assets/css/style.css?v=20261018-hero-fix">
+<link rel="stylesheet" href="./assets/css/style.css?v=20261018-new-hero">
 </head>
 <body data-page="home">
 
 <main id="main">
 
   <!-- ===== HERO ===== -->
-  <section class="hero" aria-label="メインビジュアル">
+  <section class="hero hero--renewed" aria-label="atelier kinari メインビジュアル">
     <div class="hero__media">
-      <img src="https://images.unsplash.com/photo-1633681117690-262b94a01378?auto=format&fit=crop&w=1800&q=70"
-           srcset="https://images.unsplash.com/photo-1633681117690-262b94a01378?auto=format&fit=crop&w=800&q=70 800w, https://images.unsplash.com/photo-1633681117690-262b94a01378?auto=format&fit=crop&w=1400&q=70 1400w, https://images.unsplash.com/photo-1633681117690-262b94a01378?auto=format&fit=crop&w=2200&q=70 2200w"
-           sizes="100vw" alt="やわらかな光が入るサロンの店内" width="1800" height="1200" fetchpriority="high">
+      <picture>
+        <source media="(max-width: 600px)" srcset="./assets/img/hero-salon-mobile.webp">
+        <img src="./assets/img/hero-salon.webp" alt="やわらかな光と木の温もりに包まれた美容室（架空店舗・AI生成イメージ）" width="1536" height="1024" fetchpriority="high" loading="eager">
+      </picture>
     </div>
-    <p class="hero__vertical" aria-hidden="true">ほどける、整う。</p>
     <div class="wrap hero__in">
-      <h1 class="hero__title">
-        <span class="mask"><span>atelier</span></span>
-        <span class="mask"><span>kinari</span></span>
-        <span class="skip">ほどける、整う。福岡・赤坂の美容室 atelier kinari</span>
-      </h1>
-      <p class="hero__lead" data-bind="lead">素髪がきれいな人へ。</p>
-      <div class="hero__btns">
+      <p class="hero__eyebrow">HAIR ATELIER / FUKUOKA AKASAKA</p>
+      <h1 class="hero__headline">ほどける、<br>整う。<span class="skip">atelier kinari</span></h1>
+      <p class="hero__description">素髪がきれいな人へ。<br>あなたらしさを、丁寧に。</p>
+      <div class="hero__actions">
         <a class="btn btn--fill" href="./reserve.html">ご予約はこちら<span class="arrow"></span></a>
-        <a class="btn" href="./menu.html">メニュー・料金</a>
+        <a class="hero__menu-link" href="./menu.html">メニュー・料金 <span aria-hidden="true">↗</span></a>
       </div>
+      <p class="hero__signature" aria-hidden="true">atelier kinari</p>
     </div>
-    <span class="hero__scroll" aria-hidden="true">SCROLL</span>
   </section>
 
   <!-- ===== 4点サマリー ===== -->
@@ -208,7 +205,7 @@
 
 </main>
 
-<script src="./assets/js/site-data.js?v=20261018-hero-fix"></script>
-<script src="./assets/js/main.js?v=20261018-hero-fix"></script>
+<script src="./assets/js/site-data.js?v=20261018-new-hero"></script>
+<script src="./assets/js/main.js?v=20261018-new-hero"></script>
 </body>
 </html>
