@@ -88,15 +88,7 @@
       "</div></footer>";
     document.body.insertAdjacentHTML("beforeend", footer + fixed);
 
-    // 初回のみオープニング（トップページ）
-    if (page === "home" && !reduce) {
-      var seen = false;
-      try { seen = sessionStorage.getItem("kinari-open") === "1"; sessionStorage.setItem("kinari-open", "1"); } catch (e) {}
-      if (!seen) {
-        document.body.insertAdjacentHTML("afterbegin", '<div class="opening" aria-hidden="true"><div><p class="opening__logo"><span>' + esc(S.name) + '</span></p><div class="opening__line"></div></div></div>');
-        doc.style.setProperty("--open-delay", "1.6s");
-      }
-    }
+
   }
 
   /* =========================================================
@@ -349,26 +341,6 @@
     $$(".hero__lead, .hero__btns").forEach(function (s, i) { s.style.animationDelay = (base + 1.3 + i * 0.2).toFixed(2) + "s"; });
   }
 
-  // Start all hero motion together after the opening, image and fonts are ready.
-  function startHero() {
-    var photo = $(".hero__media img"), opening = $(".opening");
-    if (!photo) return;
-    var imageReady = photo.decode ? photo.decode().catch(function () {}) : Promise.resolve();
-    var openingReady = !opening ? Promise.resolve() : new Promise(function (resolve) {
-      opening.addEventListener("animationend", function (event) {
-        if (event.target === opening) { opening.remove(); resolve(); }
-      });
-      setTimeout(function () { opening.remove(); resolve(); }, 2400);
-    });
-    var fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
-    Promise.race([
-      Promise.all([imageReady, openingReady, fontsReady]),
-      new Promise(function (resolve) { setTimeout(resolve, 4000); })
-    ]).then(function () {
-      requestAnimationFrame(function () { doc.classList.remove("hero-pending"); });
-    });
-  }
-
   // ヘッダー：スクロールで背景、下スクロールで隠れる
   function headerScroll() {
     var h = $("#header"), cta = $("#fixed-cta"), hero = $(".hero, .page-hero");
@@ -538,7 +510,6 @@
   renderAll();
   jsonLd();
   splitHero();
-  startHero();
   headerScroll();
   drawer();
   reveal();
