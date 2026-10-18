@@ -25,9 +25,9 @@
     opt = opt || {};
     var w = opt.w || 800, h = opt.h || 1000;
     var set = /^(\.|\/|http)/.test(id) ? "" :
-      ' srcset="' + src(id, 320) + ' 320w, ' + src(id, 480) + ' 480w, ' + src(id, 800) + ' 800w, ' + src(id, 1200) + ' 1200w, ' + src(id, 1800) + ' 1800w" sizes="' + (opt.sizes || "(min-width: 900px) 33vw, 50vw") + '"';
+      ' srcset="' + src(id, 480) + ' 480w, ' + src(id, 800) + ' 800w, ' + src(id, 1200) + ' 1200w, ' + src(id, 1800) + ' 1800w" sizes="' + (opt.sizes || "(min-width: 900px) 33vw, 50vw") + '"';
     return '<img src="' + src(id, 800) + '"' + set + ' alt="' + esc(alt) + '" width="' + w + '" height="' + h + '"' +
-      (opt.eager ? ' loading="eager" fetchpriority="high" decoding="async"' : ' loading="lazy" decoding="async"') + ">";
+      (opt.eager ? ' fetchpriority="high"' : ' loading="lazy" decoding="async"') + ">";
   }
   function staffById(id) { return S.staff.filter(function (s) { return s.id === id; })[0]; }
   var lengthJa = { short: "ショート", medium: "ミディアム", long: "ロング" };
@@ -64,22 +64,23 @@
         NAV.map(function (n, i) {
           return '<a class="d-link" href="' + n.href + '" style="transition-delay:' + (0.15 + i * 0.05) + 's"><em>' + n.en + "</em><span>" + n.ja + "</span></a>";
         }).join("") +
-        '<p class="drawer__info">' + esc(S.hoursShort) + "<br>TEL " + esc(S.tel) + "</p>" +
+        '<p class="drawer__info">' + esc(S.hoursShort) + "<br>TEL " + '<a href="tel:' + S.tel.replace(/-/g, "") + '">' + esc(S.tel) + '</a>' + "</p>" +
       "</div>";
-    document.body.insertAdjacentHTML("afterbegin", header);
+    // 背景のオーロラ（ゆらぐ光）とフィルムのような粒子
+    var atmos = '<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div><div class="grain" aria-hidden="true"></div>';
+    document.body.insertAdjacentHTML("afterbegin", atmos + header);
 
     var fixed =
       '<div class="fixed-cta" id="fixed-cta">' +
-        '<a href="tel:' + S.tel.replace(/-/g, "") + '">電話</a>' +
-        '<a href="' + S.reserve.line + '">LINE</a>' +
-        '<a href="' + S.reserve.web + '">WEB予約</a>' +
+        '<a href="tel:' + S.tel.replace(/-/g, "") + '" aria-label="電話をかける"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span>電話</span></a>' +
+        '<a href="' + S.reserve.line + '">LINEで予約</a>' +
       "</div>" +
       '<div class="toast" id="toast" role="status" aria-live="polite"></div>';
 
     var footer =
       '<footer class="footer"><div class="wrap">' +
         '<div class="footer__grid">' +
-          '<div><a class="logo" href="./index.html">' + esc(S.name) + '</a><address>' + esc(S.address) + "<br>" + esc(S.access) + "<br>TEL " + esc(S.tel) + "</address></div>" +
+          '<div><a class="logo" href="./index.html">' + esc(S.name) + '</a><address>' + esc(S.address) + "<br>" + esc(S.access) + "<br>TEL " + '<a href="tel:' + S.tel.replace(/-/g, "") + '">' + esc(S.tel) + '</a>' + "</address></div>" +
           '<div><p style="color:var(--muted);margin-bottom:12px">営業時間</p>' + S.hours.map(function (h) { return "<p>" + esc(h.day) + "　" + esc(h.time) + "</p>"; }).join("") + "</div>" +
           '<nav aria-label="フッターメニュー"><ul>' + NAV.map(function (n) { return '<li><a href="' + n.href + '">' + n.ja + "</a></li>"; }).join("") + "</ul></nav>" +
         "</div>" +
@@ -93,7 +94,7 @@
       try { seen = sessionStorage.getItem("kinari-open") === "1"; sessionStorage.setItem("kinari-open", "1"); } catch (e) {}
       if (!seen) {
         document.body.insertAdjacentHTML("afterbegin", '<div class="opening" aria-hidden="true"><div><p class="opening__logo"><span>' + esc(S.name) + '</span></p><div class="opening__line"></div></div></div>');
-        doc.style.setProperty("--open-delay", "0.65s");
+        doc.style.setProperty("--open-delay", "1.6s");
       }
     }
   }
@@ -152,7 +153,7 @@
   R.pageHero = function (el) {
     var p = S.pageHeroes && S.pageHeroes[page];
     if (!p) { el.remove(); return; }
-    el.outerHTML = '<figure class="ph page-hero__ph" data-clip style="--ar:4/3;--d:0s">' + img(p.id, p.alt, { w: 1200, h: 900, sizes: "(min-width: 900px) 45vw, 100vw", eager: true }) + "</figure>";
+    el.outerHTML = '<figure class="ph page-hero__ph" data-clip style="--ar:4/3;--d:.45s">' + img(p.id, p.alt, { w: 1200, h: 900, sizes: "(min-width: 900px) 45vw, 100vw", eager: true }) + "</figure>";
   };
 
   // フォトストリップ（3枚が違う速さで流れる）
@@ -193,17 +194,24 @@
       return '<button class="tab" role="tab" id="tab-' + i + '" aria-controls="panel-' + i + '" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '">' + esc(c.ja) + "</button>";
     }).join("");
     var panels = S.menu.map(function (c, i) {
-      return '<div class="panel" role="tabpanel" id="panel-' + i + '" aria-labelledby="tab-' + i + '"' + (i ? " hidden" : "") + '><div class="price-list">' +
-        c.items.map(priceRow).join("") + "</div></div>";
+      return '<div class="panel" role="tabpanel" id="panel-' + i + '" aria-labelledby="tab-' + i + '"' + (i ? " hidden" : "") + '>' + priceTable(c.items, c.ja + "の料金") + "</div>";
     }).join("");
-    el.innerHTML = '<div class="tabs" role="tablist" aria-label="メニューの種類">' + tabs + '<span class="tabs__bar"></span></div>' + panels +
-      '<ul class="notes">' + S.menuNotes.slice(0, 2).map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>";
+    el.innerHTML = '<div class="tabs" role="tablist" aria-label="メニューの種類">' + tabs + '<span class="tabs__bar"></span></div>' + panels + priceNotes(S.menuNotes.slice(0, 3));
     initTabs(el);
   };
 
-  function priceRow(it, i) {
-    return '<div class="price-row" style="animation-delay:' + (i * 0.05) + 's"><span class="nm">' + esc(it.name) + '</span><span class="pr">' + esc(it.price) + "</span>" +
-      '<span class="meta">' + (it.time ? '<span class="time">' + esc(it.time) + "</span>" : "") + (it.desc ? "<span>" + esc(it.desc) + "</span>" : "") + "</span></div>";
+  // 料金は表（table）で。メニュー名・所要時間・税込価格
+  function priceTable(items, caption) {
+    return '<table class="price-table"><caption class="skip">' + esc(caption) + '</caption>' +
+      '<thead><tr><th scope="col">メニュー</th><th scope="col">所要</th><th scope="col">税込</th></tr></thead><tbody>' +
+      items.map(function (it, i) {
+        return '<tr style="animation-delay:' + (i * 0.06).toFixed(2) + 's"><th scope="row"><span class="nm">' + esc(it.name) + "</span>" +
+          (it.desc ? '<span class="desc">' + esc(it.desc) + "</span>" : "") + '</th><td class="tm">' + esc(it.time || "") + '</td><td class="pr">' + esc(it.price) + "</td></tr>";
+      }).join("") + "</tbody></table>";
+  }
+  // 指名料・ロング料金などの補足を、表のすぐ下に枠で
+  function priceNotes(list) {
+    return '<div class="price-notes glass"><p class="price-notes__ttl">料金について</p><ul class="notes">' + list.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul></div>";
   }
 
   // メニューページ：全カテゴリ
@@ -212,8 +220,8 @@
     el.innerHTML = jump + S.menu.map(function (c) {
       return '<section class="menu-cat" id="m-' + c.cat.toLowerCase() + '" data-reveal><div class="menu-cat__head"><h2><em>' + esc(c.cat) + "</em>" + esc(c.ja) + "</h2>" +
         (c.image ? '<figure class="ph" data-clip style="--ar:4/3">' + img(c.image, c.alt || "", { w: 400, h: 300, sizes: "160px" }) + "</figure>" : "") +
-        '</div><div class="price-list">' + c.items.map(priceRow).join("") + "</div></section>";
-    }).join("") + '<ul class="notes">' + S.menuNotes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>";
+        '</div>' + priceTable(c.items, c.ja + "の料金") + "</section>";
+    }).join("") + priceNotes(S.menuNotes);
   };
 
   R.staffCards = function (el) {
@@ -233,7 +241,7 @@
         '<figure class="ph" data-clip>' + img(s.image, s.name + "のイメージ写真", { sizes: "(min-width: 900px) 380px, 100vw" }) + "</figure>" +
         '<div data-reveal><p class="en">' + esc(s.en) + " — " + esc(s.role) + "</p><h2>" + esc(s.name) + '</h2><p class="msg">' + esc(s.text) + "</p>" +
           "<dl><dt>経歴</dt><dd>" + esc(s.years) + "</dd><dt>得意</dt><dd>" + s.good.map(esc).join("／") + "</dd></dl>" +
-          '<a class="btn btn--fill" href="' + S.reserve.web + '">' + esc(s.name.split(" ")[0]) + "を指名して予約<span class=\"arrow\"></span></a>" +
+          '<a class="btn btn--fill" href="' + S.reserve.line + '">' + esc(s.name.split(" ")[0]) + "を指名してLINEで予約<span class=\"arrow\"></span></a>" +
           (works.length ? '<div class="mini">' + works.map(function (w) { return '<a href="./gallery.html" class="ph" aria-label="' + esc(w.title) + '">' + img(w.image, w.title, { w: 400, h: 400, sizes: "140px" }) + "</a>"; }).join("") + "</div>" : "") +
         "</div></article>";
     }).join("");
@@ -246,8 +254,8 @@
       var st = staffById(g.staff) || { name: "", id: "" };
       return '<article class="style-card" data-length="' + g.length + '" data-tag="' + esc(g.tag) + '" data-reveal style="--d:' + (i % 4) * 0.07 + 's">' +
         '<figure class="ph" data-clip style="--d:' + (i % 4) * 0.07 + 's">' + img(g.image, g.title, { w: 600, h: 800, sizes: "(min-width: 1080px) 25vw, (min-width: 760px) 33vw, 50vw" }) +
-        "<figcaption>" + lengthJa[g.length] + " / " + esc(g.tag) + "</figcaption></figure>" +
-        "<h3>" + esc(g.title) + '</h3><p class="by"><span>担当 ' + esc(st.name) + '</span><a href="' + S.reserve.web + '" data-staff="' + st.id + '">このスタイルで予約</a></p></article>';
+        "<figcaption><span>" + lengthJa[g.length] + " / " + esc(g.tag) + "</span><b>" + esc(g.title) + "</b></figcaption></figure>" +
+        "<h3>" + esc(g.title) + '</h3><p class="by"><span>担当 ' + esc(st.name) + '</span><a href="' + S.reserve.line + '" data-staff="' + st.id + '">このスタイルで予約</a></p></article>';
     }).join("");
 
     if (el.hasAttribute("data-filter")) {
@@ -335,10 +343,10 @@
     if (!v) return;
     var base = parseFloat(getComputedStyle(doc).getPropertyValue("--open-delay")) || 0.2;
     v.innerHTML = Array.from(v.textContent).map(function (c, i) {
-      return '<span class="ch" style="animation-delay:' + (base + 0.1 + i * 0.065).toFixed(2) + 's">' + esc(c) + "</span>";
+      return '<span class="ch" style="animation-delay:' + (base + 0.4 + i * 0.12).toFixed(2) + 's">' + esc(c) + "</span>";
     }).join("");
-    $$(".hero__title .mask > span").forEach(function (s, i) { s.style.animationDelay = (base + i * 0.12).toFixed(2) + "s"; });
-    $$(".hero__lead, .hero__btns").forEach(function (s, i) { s.style.animationDelay = (base + 0.4 + i * 0.12).toFixed(2) + "s"; });
+    $$(".hero__title .mask > span").forEach(function (s, i) { s.style.animationDelay = (base + 0.2 + i * 0.15).toFixed(2) + "s"; });
+    $$(".hero__lead, .hero__btns").forEach(function (s, i) { s.style.animationDelay = (base + 1.3 + i * 0.2).toFixed(2) + "s"; });
   }
 
   // ヘッダー：スクロールで背景、下スクロールで隠れる
@@ -372,35 +380,17 @@
     $$("a", d).forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
   }
 
-  // Start nearby image requests before they enter the viewport; keep distant images lazy.
-  function warmImages() {
-    var images = $$('img[loading="lazy"]');
-    function start(im) { im.loading = "eager"; }
-    images.forEach(function (im) {
-      if (im.getBoundingClientRect().top < window.innerHeight) start(im);
-    });
-    if (!("IntersectionObserver" in window)) return;
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        start(en.target);
-        io.unobserve(en.target);
-      });
-    }, { rootMargin: "800px 0px", threshold: 0 });
-    images.forEach(function (im) { if (im.loading === "lazy") io.observe(im); });
-  }
-
   // スクロールで表示
   function reveal() {
-    // Photo wrappers must not wait for either their own or a parent reveal.
-    $$("[data-reveal]").forEach(function (el) {
-      if ($("img", el)) el.classList.add("is-in", "reveal-photo");
+    // 見出し → 本文 → ボタンの順に、少しずつ遅らせて浮かび上がらせる
+    $$(".sec-head, .concept__text, .cta-band .wrap, .season__grid > div[data-reveal]").forEach(function (box) {
+      Array.prototype.forEach.call(box.children, function (c, i) { c.classList.add("rise"); c.style.setProperty("--i", i); });
     });
-    var els = $$("[data-reveal]:not(.reveal-photo), .ph[data-clip]");
+    var els = $$("[data-reveal], .ph[data-clip]");
     if (!("IntersectionObserver" in window) || reduce) { els.forEach(function (e) { e.classList.add("is-in"); }); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
-    }, { rootMargin: "0px 0px -24px 0px", threshold: 0.05 });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
     els.forEach(function (e) { io.observe(e); });
   }
 
@@ -528,7 +518,6 @@
   splitHero();
   headerScroll();
   drawer();
-  warmImages();
   reveal();
   parallax();
   demoLinks();
