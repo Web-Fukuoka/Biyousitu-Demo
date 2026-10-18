@@ -254,7 +254,7 @@
       var st = staffById(g.staff) || { name: "", id: "" };
       return '<article class="style-card" data-length="' + g.length + '" data-tag="' + esc(g.tag) + '" data-reveal style="--d:' + (i % 4) * 0.07 + 's">' +
         '<figure class="ph" data-clip style="--d:' + (i % 4) * 0.07 + 's">' + img(g.image, g.title, { w: 600, h: 800, sizes: "(min-width: 1080px) 25vw, (min-width: 760px) 33vw, 50vw" }) +
-        "<figcaption><span>" + lengthJa[g.length] + " / " + esc(g.tag) + "</span><b>" + esc(g.title) + "</b></figcaption></figure>" +
+        '</figure><p class="style-category">' + lengthJa[g.length] + " / " + esc(g.tag) + "</p>" +
         "<h3>" + esc(g.title) + '</h3><p class="by"><span>担当 ' + esc(st.name) + '</span><a href="' + S.reserve.line + '" data-staff="' + st.id + '">このスタイルで予約</a></p></article>';
     }).join("");
 

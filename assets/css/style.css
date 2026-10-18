@@ -680,18 +680,10 @@ body { background: transparent; }
 .jump a:hover { transform: scale(1.05); background: var(--grad); color: var(--on-grad); border-color: transparent; }
 .jump a:active { transform: scale(.95); }
 
-/* ---------- ギャラリー：ゆっくりズームし、スタイル名が浮かぶ ---------- */
+/* ---------- ギャラリー：写真と説明を分け、ゆっくりズーム ---------- */
 .style-card .ph img { transition: transform 1.6s var(--ease-soft); }
 .style-card:hover .ph img, .js .style-card:hover .ph[data-clip] img { transform: scale(1.08); }
-.style-card .ph figcaption { left: 0; right: 0; bottom: 0; padding: 40px 16px 14px; display: grid; gap: 4px; text-shadow: none; background: linear-gradient(to top, rgba(40, 30, 26, .6), rgba(40, 30, 26, 0)); }
-.style-card .ph figcaption span { font-size: .62rem; letter-spacing: .26em; color: rgba(255, 253, 249, .9); }
-.style-card .ph figcaption b { font-family: var(--f-head); font-weight: 500; font-size: 1rem; letter-spacing: .06em; color: #FFFDF9; }
-@media (hover: hover) {
-  .style-card .ph figcaption { background: linear-gradient(to top, rgba(40, 30, 26, 0), rgba(40, 30, 26, 0)); transition: background .5s var(--ease-soft); }
-  .style-card .ph figcaption b { opacity: 0; transform: translateY(12px); transition: opacity .5s var(--ease-soft), transform .5s var(--ease-soft); }
-  .style-card:hover .ph figcaption { background: linear-gradient(to top, rgba(40, 30, 26, .62), rgba(40, 30, 26, 0)); }
-  .style-card:hover .ph figcaption b { opacity: 1; transform: none; }
-}
+.style-card .style-category { margin: 0; font-size: var(--fs-xs); color: var(--muted); letter-spacing: .06em; line-height: 1.6; }
 .chip { border-radius: 999px; transition: transform .3s var(--ease), background-color .3s, color .3s, border-color .3s; }
 .chip:hover { transform: scale(1.05); }
 .chip:active { transform: scale(.95); }
