@@ -50,7 +50,7 @@ window.SITE = {
     menuSide:     { id: "photo-1626383120723-2a941488860d", alt: "白い壁の前に置かれたスタイリングチェア" },
     review:       { id: "photo-1573807195700-9e9db54988f6", alt: "仕上がった髪にそっと触れる女性" },
     faq:          { id: "photo-1633681926035-ec1ac984418a", alt: "大きな窓から光が入る待合スペース" },
-    entrance:     { id: "photo-1760243875108-ebf8801ee39b", alt: "植物が置かれた角地の建物の入口（イメージ）" },
+    entrance:     { id: "./assets/img/salon-exterior.webp", alt: "atelier kinari 美容室の外観（架空店舗・AI生成イメージ）" },
     staffBg:      { id: "photo-1626379501846-0df4067b8bb9", alt: "" }
   },
 

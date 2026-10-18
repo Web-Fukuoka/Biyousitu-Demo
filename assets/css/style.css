@@ -614,7 +614,7 @@ body { background: transparent; }
 
 /* ---------- Hero：ゆっくり動き続ける写真と、あたたかい光 ---------- */
 .hero { background: #3B2F2A; color: #FFFDF9; }
-.hero__media img { animation: heroZoom 12s var(--ease) .3s forwards, heroDrift 26s ease-in-out 12.3s infinite alternate; }
+.hero__media img { animation: heroBreathe 22s ease-in-out infinite alternate; }
 @keyframes heroDrift { from { transform: scale(1); } to { transform: scale(var(--hero-drift, 1.07)) translate3d(-1%, -.8%, 0); } }
 /* 縦長画面は動きを控えめに（左右の切り落としを増やさない） */
 @media (max-aspect-ratio: 1/1) { .hero__media img { --hero-drift: 1.03; } }
@@ -744,3 +744,16 @@ body { background: transparent; }
   .js .rise { opacity: 1; transform: none; }
   .btn:hover, .chip:hover, .jump a:hover { transform: none; }
 }
+
+/* One continuous transform avoids the jump between two hero animations. */
+@keyframes heroBreathe {
+  from { transform: scale(1.08); }
+  to { transform: scale(1.02); }
+}
+.hero-pending .hero__media img,
+.hero-pending .hero__title .mask > span,
+.hero-pending .hero__vertical .ch,
+.hero-pending .hero__lead,
+.hero-pending .hero__btns { animation: none !important; }
+.hero-pending .hero__media img { transform: scale(1.08); }
+.hero-pending .hero__vertical { opacity: 0; }

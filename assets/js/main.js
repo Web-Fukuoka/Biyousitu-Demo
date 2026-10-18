@@ -341,7 +341,7 @@
   function splitHero() {
     var v = $(".hero__vertical");
     if (!v) return;
-    var base = parseFloat(getComputedStyle(doc).getPropertyValue("--open-delay")) || 0.2;
+    var base = 0.1;
     v.innerHTML = Array.from(v.textContent).map(function (c, i) {
       return '<span class="ch" style="animation-delay:' + (base + 0.4 + i * 0.12).toFixed(2) + 's">' + esc(c) + "</span>";
     }).join("");
@@ -349,17 +349,39 @@
     $$(".hero__lead, .hero__btns").forEach(function (s, i) { s.style.animationDelay = (base + 1.3 + i * 0.2).toFixed(2) + "s"; });
   }
 
+  // Start all hero motion together after the opening, image and fonts are ready.
+  function startHero() {
+    var photo = $(".hero__media img"), opening = $(".opening");
+    if (!photo) return;
+    var imageReady = photo.decode ? photo.decode().catch(function () {}) : Promise.resolve();
+    var openingReady = !opening ? Promise.resolve() : new Promise(function (resolve) {
+      opening.addEventListener("animationend", function (event) {
+        if (event.target === opening) { opening.remove(); resolve(); }
+      });
+      setTimeout(function () { opening.remove(); resolve(); }, 2400);
+    });
+    var fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+    Promise.race([
+      Promise.all([imageReady, openingReady, fontsReady]),
+      new Promise(function (resolve) { setTimeout(resolve, 4000); })
+    ]).then(function () {
+      requestAnimationFrame(function () { doc.classList.remove("hero-pending"); });
+    });
+  }
+
   // ヘッダー：スクロールで背景、下スクロールで隠れる
   function headerScroll() {
     var h = $("#header"), cta = $("#fixed-cta"), hero = $(".hero, .page-hero");
-    var last = 0, ticking = false;
+    var last = Math.max(0, window.scrollY), ticking = false;
     function update() {
-      var y = window.scrollY;
+      var y = Math.max(0, window.scrollY);
       var heroEnd = hero ? hero.offsetHeight * 0.6 : 200;
       if (h.classList.contains("on-hero")) h.classList.toggle("is-solid", y > 40);
-      h.classList.toggle("is-hidden", y > last && y > 400 && !doc.classList.contains("menu-open"));
+      if (y < 80 || doc.classList.contains("menu-open")) h.classList.remove("is-hidden");
+      else if (Math.abs(y - last) > 8) h.classList.toggle("is-hidden", y > last && y > 400);
       cta.classList.toggle("is-show", y > heroEnd);
-      last = y; ticking = false;
+      if (Math.abs(y - last) > 8) last = y;
+      ticking = false;
     }
     window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
     update();
@@ -516,6 +538,7 @@
   renderAll();
   jsonLd();
   splitHero();
+  startHero();
   headerScroll();
   drawer();
   reveal();

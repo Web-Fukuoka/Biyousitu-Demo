@@ -92,3 +92,7 @@
 
 ## OGP画像・ファビコン
 オリジナル制作（ばってんらぼ）。
+
+
+## Salon exterior replacement
+`assets/img/salon-exterior.webp`: AI-generated fictional atelier kinari hair salon exterior, created with OpenAI image generation, 2026-10-18. Not a photograph of an actual business.
